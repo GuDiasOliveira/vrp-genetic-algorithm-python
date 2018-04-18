@@ -79,6 +79,26 @@ def fitness(p):
 	return s
 
 def adjust(p):
+	# Adjust repeated
+	repeated = True
+	while repeated:
+		c = False
+		for i1 in range(len(p)):
+			for i2 in range(i1):
+				if p[i1] == p[i2]:
+					haveAll = True
+					for nodeId in range(len(vrp['nodes'])):
+						if nodeId not in p:
+							p[i1] = nodeId
+							haveAll = False
+							break
+					if haveAll:
+						del p[i1]
+					c = True
+				if c: break
+			if c: break
+		repeated = c
+	# Adjust capacity exceed
 	i = 0
 	s = 0.0
 	cap = vrp['capacity']
@@ -89,23 +109,11 @@ def adjust(p):
 			s = 0.0
 		i += 1
 	i = len(p) - 2
+	# adjust two consective depots
 	while i >= 0:
 		if p[i] == 0 and p[i + 1] == 0:
 			del p[i]
 		i -= 1
-	repeated = True
-	while repeated:
-		c = False
-		for i1 in range(len(p)):
-			for i2 in range(i1):
-				if p[i1] == p[i2]:
-					p[i1] += 1
-					if p[i1] == len(vrp['nodes']):
-						p[i1] = 1
-					c = True
-				if c: break
-			if c: break
-		repeated = c
 
 
 popsize = int(sys.argv[1])
@@ -152,7 +160,10 @@ for p in pop:
 		better = p
 
 
+print ' route:'
 print 'depot'
 for nodeIdx in better:
 	print vrp['nodes'][nodeIdx]['label']
 print 'depot'
+print ' cost:'
+print '%f' % bf
