@@ -1,3 +1,5 @@
+# This is another example of data input
+
 params:
   capacity 10.000000
 nodes:
