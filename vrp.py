@@ -40,6 +40,10 @@ while line.lower() != 'nodes:':
 		exit(1)
 	if inputs[0].lower() == 'capacity':
 		vrp['capacity'] = float(inputs[1])
+		# Validating positive non-zero capacity
+		if vrp['capacity'] <= 0:
+			print >> sys.stderr, 'Invalid input: capacity must be neither negative nor zero!'
+			exit(1)
 	else:
 		print >> sys.stderr, 'Invalid input: invalid VRP initial param!'
 		exit(1)
@@ -59,9 +63,19 @@ while line != None:
 	if len(inputs) < 4:
 		print >> sys.stderr, 'Invalid input: too few arguments for a node!'
 		exit(1)
-	vrp['nodes'].append({'label' : inputs[0], 'demand' : float(inputs[1]), 'posX' : float(inputs[2]), 'posY' : float(inputs[3])})
+	node = {'label' : inputs[0], 'demand' : float(inputs[1]), 'posX' : float(inputs[2]), 'posY' : float(inputs[3])}
+	# Validating demand neither negative nor zero
+	if node['demand'] <= 0:
+		print >> sys.stderr, 'Invalid input: the demand if the node %s is negative or zero!' % node['label']
+		exit(1)
+	# Validating demand not greater than capacity
+	if node['demand'] > vrp['capacity']:
+		print >> sys.stderr, 'Invalid input: the demand of the node %s is greater than the vehicle capacity!' % node['label']
+		exit(1)
+	vrp['nodes'].append(node)
 	line = readinput()
 
+# Validating no such nodes
 if len(vrp['nodes']) == 0:
 	print >> sys.stderr, 'Invalid input: no such nodes!'
 	exit(1)
