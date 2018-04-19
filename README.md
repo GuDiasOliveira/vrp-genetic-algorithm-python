@@ -62,6 +62,7 @@ python vrp.py [population-size] [number-of-iterations] < input-file.txt
 ```
 
 Required params:
+
 1. ```[population-size]``` is an integer positive number that specifies the number of individuals of each generation in the genetic algorithm;
 2. ```[number-of-iterations]``` is an integer positive number that specifies the number of iterations (population generations) of the genetic algorithm.
 
